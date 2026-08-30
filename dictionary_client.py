@@ -5,7 +5,7 @@ from models import Word
 class DictionaryClient: # Class For Dictionary API searches 
     MAIN_URL = "https://api.dictionaryapi.dev/api/v2/entries/en"
 
-    def search_word(self,word): # Search attribute
+    def search_word(self,word): # Searches for a word using the dictionary API
         url = f"{self.MAIN_URL}/{word}"
 
         response = requests.get(url)
@@ -14,12 +14,12 @@ class DictionaryClient: # Class For Dictionary API searches
             return None
 
 
-        data = response.json()
+        data = response.json()  # Converts API response into Python data
 
     
-        entry = data[0]
+        entry = data[0] # Uses the first dictionary entry returned
 
-        definition = entry["meanings"][0]["definitions"][0]["definition"]
+        definition = entry["meanings"][0]["definitions"][0]["definition"] # Gets the first available definition
 
         phonetic = entry.get("phonetic","")
 
@@ -28,7 +28,7 @@ class DictionaryClient: # Class For Dictionary API searches
         synonyms = []
         antonyms = []
 
-        for meaning in entry.get("meanings", []):
+        for meaning in entry.get("meanings", []):  # Goes through all meanings of the word
             synonyms.extend(meaning.get("synonyms", []))
             antonyms.extend(meaning.get("antonyms", []))
             
@@ -42,9 +42,9 @@ class DictionaryClient: # Class For Dictionary API searches
 
                 antonyms.extend(definition_item.get("antonyms", []))
 
-                examples = list(dict.fromkeys(examples)) # Removes Duplicates
-                synonyms = list(dict.fromkeys(synonyms))
-                antonyms = list(dict.fromkeys(antonyms))
+        examples = list(dict.fromkeys(examples)) # Removes Duplicates
+        synonyms = list(dict.fromkeys(synonyms))
+        antonyms = list(dict.fromkeys(antonyms))
 
         return Word(word=word, definition=definition, phonetic=phonetic, synonyms=synonyms, examples=examples, antonyms=antonyms  )
 

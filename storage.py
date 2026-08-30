@@ -1,13 +1,13 @@
 import json
 from models import Word
 
-class VocabularyStorage: # For Storing the saved words
+class VocabularyStorage: # Handles saving and loading vocabulary words
     def __init__(self, filename="vocabulary.json") -> None:
         self.filename= filename
 
-    def load_words(self): # For loading the file with saved words
+    def load_words(self): # Loads saved vocabulary words from the JSON file
         try:
-            with open("vocabulary.json", "r") as file:
+            with open(self.filename, "r") as file:
                 data = json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
             return {}
