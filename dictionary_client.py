@@ -2,15 +2,18 @@ import requests
 from models import Word
 
 
-class DictionaryClient: # Class For Dictionary API searches 
+class DictionaryClient: # Handles dictionary API searches
     MAIN_URL = "https://api.dictionaryapi.dev/api/v2/entries/en"
 
     def search_word(self,word): # Searches for a word using the dictionary API
         url = f"{self.MAIN_URL}/{word}"
 
-        response = requests.get(url)
+        try:
+            response = requests.get(url, timeout=20)  # Sends request to the dictionary API
+        except requests.RequestException:
+            return None  # Returns None if there is a connection problem
 
-        if response.status_code != 200:
+        if response.status_code != 200: # Returns None if the API could not find the word
             return None
 
 

@@ -1,5 +1,4 @@
 import json
-from models import Word
 
 class VocabularyStorage: # Handles saving and loading vocabulary words
     def __init__(self, filename="vocabulary.json") -> None:
@@ -9,7 +8,7 @@ class VocabularyStorage: # Handles saving and loading vocabulary words
         try:
             with open(self.filename, "r") as file:
                 data = json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
+        except (FileNotFoundError, json.JSONDecodeError): # Returns an empty dictionary if the file is missing or invalid
             return {}
 
         return data
@@ -17,10 +16,10 @@ class VocabularyStorage: # Handles saving and loading vocabulary words
     def save_word(self,word): # Saving one word
         data = self.load_words()
 
-        if word.word in data:
+        if word.word in data:  # Prevents duplicate words from being saved
             return False
 
-        data[word.word] = word.to_dict()
+        data[word.word] = word.to_dict()  # Converts the Word object into a dictionary before saving
 
         self.save_words(data)
 

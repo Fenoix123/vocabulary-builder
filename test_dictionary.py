@@ -2,15 +2,16 @@ from dictionary_client import DictionaryClient
 from storage import VocabularyStorage
 
 
-client = DictionaryClient()
-storage = VocabularyStorage()
+client = DictionaryClient()  # Handles dictionary API searches
+storage = VocabularyStorage()  # Handles vocabulary storage
 
-word_input = input("Enter a word: ").strip()
 
-result = client.search_word(word_input)
+word = input("Enter a word: ")
+
+result = client.search_word(word)
 
 if result is None:
-    print("Word not found.")
+    print("Word not found or dictionary service unavailable.")
 
 else:
     saved = storage.save_word(result)
@@ -18,4 +19,4 @@ else:
     if saved:
         print(f"{result.word} saved successfully.")
     else:
-        print(f"{result.word} is already in your vocabulary.")
+        print(f"{result.word} is already saved.")
