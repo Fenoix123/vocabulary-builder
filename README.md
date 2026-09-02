@@ -21,6 +21,7 @@ vocabulary-builder/
 ├── dictionary_client.py
 ├── quiz.py
 ├── models.py
+├── flashcard.py
 ├── storage.py
 ├── test_dictionary.py
 ├── vocabulary.json
