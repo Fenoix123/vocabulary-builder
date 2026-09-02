@@ -1,7 +1,7 @@
 {
     "girl": {
         "word": "girl",
-        "defintion": "A female child, adolescent, or a young woman.",
+        "definition": "A female child, adolescent, or a young woman.",
         "phonetic": "/\u0261\u0275\u02d0l/",
         "examples": [
             "Your girl turned up on our doorstep.",
@@ -25,6 +25,59 @@
             "Jessie",
             "sissy",
             "wimp"
+        ],
+        "antonyms": []
+    },
+    "boy": {
+        "word": "boy",
+        "definition": "A young male.",
+        "phonetic": "/b\u0254\u02d0\u0259/",
+        "examples": [
+            "Kate is dating a boy named Jim.",
+            "Are you getting a boy cat or a girl cat?",
+            "Don't boy me!",
+            "Boy, I wish I could go to Canada!"
+        ],
+        "synonyms": [
+            "chap",
+            "guy",
+            "lad",
+            "mate",
+            "brat",
+            "knave",
+            "squirt",
+            "manservant",
+            "son"
+        ],
+        "antonyms": []
+    },
+    "car": {
+        "word": "car",
+        "definition": "A wheeled vehicle that moves independently, with at least three wheels, powered mechanically, steered by a driver and mostly for personal transportation.",
+        "phonetic": "/k\u0251\u02d0/",
+        "examples": [
+            "She drove her car to the mall.",
+            "The conductor coupled the cars to the locomotive.",
+            "The 11:10 to London was operated by a 4-car diesel multiple unit.",
+            "From the frontmost car of the subway, he filmed the progress through the tunnel.",
+            "We ordered five hundred cars of gypsum.",
+            "Fix the car of the express elevator - the door is sticking.",
+            "The most exciting part of riding a Ferris wheel is when your car goes over the top.",
+            "Buy now! You can get more car for your money."
+        ],
+        "synonyms": [
+            "auto",
+            "automobile",
+            "carriage",
+            "motor",
+            "motorcar",
+            "vehicle",
+            "basket",
+            "gondola",
+            "carload",
+            "wagonload",
+            "railcar",
+            "wagon"
         ],
         "antonyms": []
     }
