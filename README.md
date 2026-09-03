@@ -23,6 +23,7 @@ vocabulary-builder/
 ├── models.py
 ├── flashcard.py
 ├── storage.py
+├── main.py
 ├── test_dictionary.py
 ├── vocabulary.json
 ├── requirements.txt

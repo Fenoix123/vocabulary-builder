@@ -80,5 +80,25 @@
             "wagon"
         ],
         "antonyms": []
+    },
+    "van": {
+        "word": "van",
+        "definition": "A covered vehicle used for carrying goods or people, usually roughly cuboid in shape, longer and higher than a car but smaller than a truck/lorry.",
+        "phonetic": "/v\u00e6n/",
+        "examples": [
+            "The van sped down the road."
+        ],
+        "synonyms": [],
+        "antonyms": []
+    },
+    "rake": {
+        "word": "rake",
+        "definition": "A garden tool with a row of pointed teeth fixed to a long handle, used for collecting debris, grass, etc., for flattening the ground, or for loosening soil; also, a similar wheel-mounted tool drawn by a horse or a tractor.",
+        "phonetic": "/\u0279e\u026ak/",
+        "examples": [],
+        "synonyms": [
+            "horserake"
+        ],
+        "antonyms": []
     }
 }
