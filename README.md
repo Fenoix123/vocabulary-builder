@@ -1,31 +1,34 @@
 # Vocabulary Builder
 
-A Python-based vocabulary learning application that uses a dictionary API to retrieve word information and stores saved vocabulary locally in a JSON file.
+A Python vocabulary learning application that allows users to search for words, save vocabulary, review flashcards, and take quizzes.
 
-## Current Features
+## Features
 
-- Search for English words using the Dictionary API
-- Retrieve word definitions
-- Retrieve phonetic pronunciation where available
-- Retrieve examples, synonyms, and antonyms
-- Save vocabulary words to a JSON file
-- Prevent duplicate words from being saved
-- Handle invalid words and API connection errors
-- Load previously saved vocabulary words
+- Search for English words using an online dictionary API
+- Display word definitions and phonetics
+- Save vocabulary to a JSON file
+- Prevent duplicate saved words
+- Review saved words using flashcards
+- Reveal definitions during flashcard review
+- Move through saved flashcards
+- Take vocabulary quizzes
+- Track correct and wrong quiz answers
+- Graphical User Interface using Tkinter
+- Command-line interface available through `main.py`
 
 ## Project Structure
 
 ```text
 vocabulary-builder/
 │
-├── dictionary_client.py
-├── quiz.py
-├── models.py
-├── flashcard.py
-├── storage.py
-├── main.py
-├── test_dictionary.py
-├── vocabulary.json
-├── requirements.txt
-├── README.md
-└── .gitignore
+├── dictionary_client.py   # Connects to the dictionary API
+├── flashcard.py           # Flashcard functionality
+├── gui.py                 # Tkinter graphical user interface
+├── main.py                # Command-line application integration
+├── models.py              # Word model
+├── quiz.py                # Quiz functionality
+├── storage.py             # Saves and loads vocabulary
+├── test_dictionary.py     # Dictionary API testing
+├── vocabulary.json        # Stores saved vocabulary
+├── requirements.txt       # Required external packages
+└── README.md              # Project documentation
