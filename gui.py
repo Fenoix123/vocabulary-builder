@@ -3,6 +3,7 @@ import tkinter as tk
 from dictionary_client import DictionaryClient
 from storage import VocabularyStorage
 from quiz import Quiz
+from spaced_repetition import SpacedRepetitionManager
 
 
 class VocabularyGUI:
@@ -11,7 +12,10 @@ class VocabularyGUI:
 
         self.dictionary = DictionaryClient()
         self.storage = VocabularyStorage()
+        self.spaced_repetition = SpacedRepetitionManager(self.storage)
+
         self.current_result = None
+        self.flashcard_index = 0
 
         self.root.title("Vocabulary Builder")
         self.root.geometry("600x500")
@@ -63,7 +67,7 @@ class VocabularyGUI:
     def open_search_window(self):  # Opens the word search window
         search_window = tk.Toplevel(self.root)
         search_window.title("Search Word")
-        search_window.geometry("500x450")
+        search_window.geometry("500x500")
 
         title = tk.Label(
             search_window,
@@ -89,7 +93,6 @@ class VocabularyGUI:
 
         def search():  # Searches for the word entered
             self.current_result = None
-
             word = word_entry.get().strip()
 
             if not word:
@@ -125,11 +128,8 @@ class VocabularyGUI:
                          "Word saved successfully."
                 )
             else:
-                result_label.config(
-                    text="This word is already saved."
-                )
+                result_label.config(text="This word is already saved.")
 
-        # Search button
         search_button = tk.Button(
             search_window,
             text="Search",
@@ -138,7 +138,6 @@ class VocabularyGUI:
         )
         search_button.pack(pady=10)
 
-        # Save button
         save_button = tk.Button(
             search_window,
             text="Save Word",
@@ -147,35 +146,60 @@ class VocabularyGUI:
         )
         save_button.pack(pady=10)
 
-        close_button = tk.Button( search_window, text="Close",width=15,command=search_window.destroy
-    )
+        close_button = tk.Button(
+            search_window,
+            text="Close",
+            width=15,
+            command=search_window.destroy
+        )
         close_button.pack(pady=10)
 
-    def open_flashcard_window(self):  # Opens the flashcard window
-        words = self.storage.load_words()
+    def open_flashcard_window(self):  # Opens the flashcard review window
+        words = self.spaced_repetition.get_due_words()
 
         flashcard_window = tk.Toplevel(self.root)
         flashcard_window.title("Flashcards")
-        flashcard_window.geometry("500x450")
+        flashcard_window.geometry("500x520")
 
         if not words:
             message = tk.Label(
                 flashcard_window,
-                text="No saved words available.",
+                text="No words are due for review today.",
                 font=("Arial", 14)
             )
             message.pack(pady=50)
+
+            close_button = tk.Button(
+                flashcard_window,
+                text="Close",
+                width=20,
+                command=flashcard_window.destroy
+            )
+            close_button.pack(pady=10)
             return
 
         word_list = list(words.items())
         self.flashcard_index = 0
+
+        title = tk.Label(
+            flashcard_window,
+            text="Flashcard Review",
+            font=("Arial", 20, "bold")
+        )
+        title.pack(pady=20)
+
+        progress_label = tk.Label(
+            flashcard_window,
+            text=""
+        )
+        progress_label.pack(pady=5)
 
         word_label = tk.Label(
             flashcard_window,
             text="",
             font=("Arial", 22, "bold")
         )
-        word_label.pack(pady=40)
+        word_label.pack(pady=30)
 
         definition_label = tk.Label(
             flashcard_window,
@@ -185,28 +209,71 @@ class VocabularyGUI:
         )
         definition_label.pack(pady=20)
 
-        def show_word():  # Displays the current flashcard
+        status_label = tk.Label(
+            flashcard_window,
+            text="",
+            font=("Arial", 11)
+        )
+        status_label.pack(pady=10)
+
+        def show_word():  # Displays the current word
+            if self.flashcard_index >= len(word_list):
+                finish_review()
+                return
+
             word, details = word_list[self.flashcard_index]
+
+            progress_label.config(
+                text=f"Card {self.flashcard_index + 1} of {len(word_list)}"
+            )
 
             word_label.config(text=word)
             definition_label.config(text="")
+            status_label.config(text="")
 
-        def show_definition():  # Reveals the word definition
+            reveal_button.config(state="normal")
+            remembered_button.config(state="disabled")
+            forgot_button.config(state="disabled")
+
+        def show_definition():  # Reveals the current word definition
             word, details = word_list[self.flashcard_index]
 
             definition_label.config(
-                text=details["definition"]
+                text=details.get("definition", "Definition not available.")
             )
 
-        def next_word():  # Moves to the next flashcard
+            reveal_button.config(state="disabled")
+            remembered_button.config(state="normal")
+            forgot_button.config(state="normal")
+
+        def review_word(correct):  # Updates spaced repetition schedule
+            word, details = word_list[self.flashcard_index]
+
+            self.spaced_repetition.review_word(
+                word,
+                correct
+            )
+
             self.flashcard_index += 1
-
-            if self.flashcard_index >= len(word_list):
-                self.flashcard_index = 0
-
             show_word()
 
-        show_word()
+        def remembered():
+            review_word(True)
+
+        def forgot():
+            review_word(False)
+
+        def finish_review():  # Runs when all due cards are reviewed
+            progress_label.config(text="Review Complete")
+            word_label.config(text="Well done!")
+            definition_label.config(
+                text="You have reviewed all words due today."
+            )
+            status_label.config(text="")
+
+            reveal_button.config(state="disabled")
+            remembered_button.config(state="disabled")
+            forgot_button.config(state="disabled")
 
         reveal_button = tk.Button(
             flashcard_window,
@@ -214,23 +281,35 @@ class VocabularyGUI:
             width=20,
             command=show_definition
         )
-        reveal_button.pack(pady=10)
+        reveal_button.pack(pady=8)
 
-        next_button = tk.Button(
+        remembered_button = tk.Button(
             flashcard_window,
-            text="Next Word",
+            text="Remembered",
             width=20,
-            command=next_word
+            command=remembered,
+            state="disabled"
         )
-        next_button.pack(pady=10)
+        remembered_button.pack(pady=8)
+
+        forgot_button = tk.Button(
+            flashcard_window,
+            text="Forgot",
+            width=20,
+            command=forgot,
+            state="disabled"
+        )
+        forgot_button.pack(pady=8)
 
         close_button = tk.Button(
-        flashcard_window,
-        text="Close",
-        width=20,
-        command=flashcard_window.destroy
-    )
+            flashcard_window,
+            text="Close",
+            width=20,
+            command=flashcard_window.destroy
+        )
         close_button.pack(pady=10)
+
+        show_word()
 
     def open_quiz_window(self):  # Opens the quiz window
         quiz = Quiz()
@@ -238,7 +317,7 @@ class VocabularyGUI:
 
         quiz_window = tk.Toplevel(self.root)
         quiz_window.title("Vocabulary Quiz")
-        quiz_window.geometry("550x500")
+        quiz_window.geometry("550x550")
 
         if not words:
             message = tk.Label(
@@ -247,11 +326,17 @@ class VocabularyGUI:
                 font=("Arial", 14)
             )
             message.pack(pady=50)
+
+            close_button = tk.Button(
+                quiz_window,
+                text="Close",
+                width=20,
+                command=quiz_window.destroy
+            )
+            close_button.pack(pady=10)
             return
 
-        # Makes a copy so quiz questions can be removed without changing saved data
         quiz_words = words.copy()
-
         question_count = min(5, len(quiz_words))
         current_question = 0
         current_word = ""
@@ -323,9 +408,7 @@ class VocabularyGUI:
                 return
 
             if quiz.check_answer(answer, current_word):
-                feedback_label.config(
-                    text="Correct!"
-                )
+                feedback_label.config(text="Correct!")
             else:
                 feedback_label.config(
                     text=f"Wrong. The correct answer is: {current_word}"
@@ -335,15 +418,12 @@ class VocabularyGUI:
             submit_button.config(state="disabled")
             next_button.config(state="normal")
 
-            # Changes button text after the final question
             if current_question == question_count:
                 next_button.config(text="Finish Quiz")
 
         def next_question():
             if current_question >= question_count:
-                question_label.config(
-                    text="Quiz Finished!"
-                )
+                question_label.config(text="Quiz Finished!")
 
                 progress_label.config(
                     text=f"Correct: {quiz.correct}    Wrong: {quiz.wrong}"
@@ -377,16 +457,13 @@ class VocabularyGUI:
         next_button.pack(pady=10)
 
         close_button = tk.Button(
-        quiz_window,
-        text="Close Quiz",
-        width=20,
-        command=quiz_window.destroy
-    )
+            quiz_window,
+            text="Close Quiz",
+            width=20,
+            command=quiz_window.destroy
+        )
         close_button.pack(pady=10)
 
-        quiz_window.geometry("550x500")
-
-        # Displays the first question
         show_question()
 
     def run(self):  # Starts the GUI
