@@ -35,6 +35,7 @@ vocabulary-builder/
 ├── vocabulary.json        # Stores saved vocabulary
 ├── requirements.txt       # External Python dependencies
 ├── .gitignore             # Files excluded from Git
+├── spaced_repetition.py   # Handles Spaced repetition
 └── README.md              # Project documentation
 ```
 
