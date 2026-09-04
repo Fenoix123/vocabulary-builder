@@ -18,6 +18,7 @@ The application uses an online dictionary API to retrieve word information and p
 - Track correct and wrong quiz answers
 - Handle empty vocabulary lists without crashing
 - Graphical User Interface built with Tkinter
+- Remember and forget saved wors
 
 ## Project Structure
 
